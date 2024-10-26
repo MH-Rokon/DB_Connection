@@ -1,13 +1,18 @@
 import json
 import psycopg2
 from psycopg2 import sql
+from dotenv import load_dotenv
+import os
 
-# Database connection details
-host = "dpg-csdvkr3v2p9s73b2bkog-a"
-port = "5432"
-dbname = "preventers"
-user = "preventers_user"
-password = "xR7u0DpZsQRdyArWZGmrCQ7zMrH53lQp"
+# Load environment variables from .env file
+load_dotenv()
+
+# Database connection details from environment variables
+host = os.getenv("DB_HOST")
+port = os.getenv("DB_PORT")
+dbname = os.getenv("DB_NAME")
+user = os.getenv("DB_USER")
+password = os.getenv("DB_PASSWORD")
 
 try:
     # Connect to the PostgreSQL database
@@ -26,11 +31,11 @@ try:
     region_id = 2
 
     # SQL query to retrieve the latest weather data for the specified region_id
-    query = sql.SQL("""
-        SELECT temperature, wind_speed, humidity, current_instruction
+    query = sql.SQL(""" 
+        SELECT temperature, wind_speed, humidity, current_instruction 
         FROM weather_data 
         WHERE region_id = %s 
-        AND id = (SELECT MAX(id) FROM weather_data WHERE region_id = %s);
+        AND id = (SELECT MAX(id) FROM weather_data WHERE region_id = %s); 
     """)
 
     # Execute the query
